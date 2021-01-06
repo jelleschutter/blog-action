@@ -26,7 +26,7 @@ async function run() {
     postFiles.forEach(postPath => {
       const post = matter.read(path.join(postsPath, postPath));
       const published = post.data.published;
-      const slug = post.data.slug || slugify(post.data.title);
+      const slug = post.data.slug ?? slugify(post.data.title);
 
       let url = [published.getFullYear(), published.getMonth() + 1, published.getDate(), slug, ''].join('/').toLowerCase();
       if (url in posts) {
@@ -56,7 +56,7 @@ async function run() {
     });
 
     deployAction({
-      accessToken: core.getInput('GITHUB_TOKEN'),
+      githubToken: core.getInput('GITHUB_TOKEN'),
       branch: 'gh-pages',
       folder: path.join(frontendPath, 'dist'),
       repositoryName: process.env.GITHUB_REPOSITORY,
