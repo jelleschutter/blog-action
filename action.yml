@@ -1,0 +1,5 @@
+name: 'Blog Action'
+description: 'Creates blog from repository'
+runs:
+  using: 'node12'
+  main: 'dist/index.js'

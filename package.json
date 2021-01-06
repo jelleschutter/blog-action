@@ -1,0 +1,28 @@
+{
+  "name": "blog-action",
+  "version": "1.0.0",
+  "description": "Creates blog from repository",
+  "main": "index.js",
+  "dependencies": {
+    "@actions/core": "^1.2.6",
+    "@actions/github": "^4.0.0",
+    "@jamesives/github-pages-deploy-action": "^3.7.1",
+    "gray-matter": "^4.0.2",
+    "marked": "^1.2.7",
+    "slugify": "^1.4.6"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jelleschutter/blog-action.git"
+  },
+  "author": "Jelle Schutter",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jelleschutter/blog-action/issues"
+  },
+  "homepage": "https://github.com/jelleschutter/blog-action#readme"
+}
