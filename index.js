@@ -7,7 +7,7 @@ const slugify = require('slugify');
 
 const deployAction = require('@jamesives/github-pages-deploy-action');
 
-const rootPath = process.env.GITHUB_WORKPACE;
+const rootPath = process.env['GITHUB_WORKSPACE'];
 const frontendPath = './blog-action-frontend';
 
 async function run() {
@@ -34,29 +34,34 @@ async function run() {
       posts[url] = post;
     });
 
+    fs.mkdirSync(path.join(frontendPath, 'src/assets'), { recursive: true });
+    
     fs.writeFileSync(path.join(frontendPath, 'src/assets/posts.json'), JSON.stringify(posts));
 
     exec('npm run build', { cwd: frontendPath }, (err, stdout, stderr) => {
       if (err) throw err;
+
       Object.keys(posts).forEach(key => {
         fs.mkdir(path.join(frontendPath, 'dist/', key), { recursive: true }, err => {
           if (err) throw err;
+
           fs.copyFile(path.join(frontendPath, 'dist/index.html'), path.join(frontendPath, 'dist/', key, 'index.html'), err => {
             if (err) throw err;
+
+            deployAction({
+              githubToken: core.getInput('GITHUB_TOKEN'),
+              branch: 'gh-pages',
+              folder: path.join(frontendPath, 'dist'),
+              repositoryName: process.env.GITHUB_REPOSITORY,
+              silent: true,
+              workspace: '.',
+              clean: true
+            });
           })
         });
       });
     });
 
-    deployAction({
-      githubToken: core.getInput('GITHUB_TOKEN'),
-      branch: 'gh-pages',
-      folder: path.join(frontendPath, 'dist'),
-      repositoryName: process.env.GITHUB_REPOSITORY,
-      silent: true,
-      workspace: '.',
-      clean: true
-    });
   } catch (error) {
     core.setFailed(error);
   }
