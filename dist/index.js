@@ -65,7 +65,7 @@ async function run() {
       clean: true
     });
   } catch (error) {
-    core.setFailed(error.message);
+    core.setFailed(error);
   }
 }
 
