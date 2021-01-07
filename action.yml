@@ -1,8 +1,31 @@
-name: 'Blog Action'
-description: 'Creates blog from repository'
+name: Blog Action
+description: Creates blog from repository
 runs:
-  using: 'node12'
-  main: 'dist/index.js'
+  using: composite
+  steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Setup Node.js
+      uses: actions/setup-node@v2
+    - run: node $GITHUB_ACTION_PATH/index.js
+      shell: bash
+    - name: Build Frontend
+      working-directory: $GITHUB_ACTION_PATH/blog-action-frontend
+      shell: bash
+      run: |
+        npm install
+        npm run build
+    - run: node $GITHUB_ACTION_PATH/build-directory-structure.js
+      shell: bash
+    - name: Deploy to GitHub Pages
+      uses: JamesIves/github-pages-deploy-action@3.7.1
+      with:
+        GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
+        BRANCH: gh-pages
+        FOLDER: $GITHUB_ACTION_PATH/blog-action-frontend/dist
+        REPOSITORY_NAME: ${{ env.GITHUB_REPOSITORY }}
+        WORKSPACE: $GITHUB_ACTION_PATH
+        CLEAN: true
 inputs:
   GITHUB_TOKEN:
     required: false
